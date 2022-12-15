@@ -15,15 +15,21 @@ func main() {
 	defer models.CloseDB()
 
 	models.CreateTableRol()
-	//mux := http.NewServeMux()
+	mux := http.NewServeMux()
 
-	http.HandleFunc("/addRol", handlers.AddHeaders(v1.AddRol, "POST"))
+	endPoints(mux)
 
-	//getRol := handlers.HeadersMiddleware(http.HandlerFunc(v1.GetAllRols), "PUT")
-	//http.Handle("/getRols", handlers.CORS(http.HandlerFunc(v1.GetAllRols)))
-	http.HandleFunc("/getRols", v1.GetAllRols)
-
-	//http.Handle("/addRol", handlers.HeadersMiddleware(htt, "POST"))
 	fmt.Println("Corriendo servidor...")
-	http.ListenAndServe(":8000", nil)
+	http.ListenAndServe(":8000", mux)
+}
+
+func endPoints(mux *http.ServeMux) {
+	addRol := handlers.HeadersMiddleware(http.HandlerFunc(v1.AddRol), "POST")
+	mux.Handle("/addRol", addRol)
+
+	getRol := handlers.HeadersMiddleware(http.HandlerFunc(v1.GetAllRols), "PUT")
+	mux.Handle("/getRols", getRol)
+
+	getRolsData := handlers.HeadersMiddleware(http.HandlerFunc(v1.GetAllRolsData), "PUT")
+	mux.Handle("/getRolsData", getRolsData)
 }

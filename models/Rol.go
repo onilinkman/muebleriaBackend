@@ -50,3 +50,19 @@ func GetAllRol(mount, from int) (Roles, error) {
 	}
 	return roles, nil
 }
+
+func GetAllRolsData(mount, from int) (Roles, error) {
+	roles := Roles{}
+	query := `SELECT id_rol,nombre,(SELECT COUNT(*) FROM rol) as numRows from rol LIMIT ? OFFSET ?;`
+	rows, err := Query(query, mount, from)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		rol := Rol{}
+		rows.Scan(&rol.Id_rol, &rol.Nombre, &rol.Mount)
+		roles = append(roles, rol)
+	}
+	return roles, nil
+}
