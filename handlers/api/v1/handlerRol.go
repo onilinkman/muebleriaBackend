@@ -50,3 +50,17 @@ func GetAllRolsData(w http.ResponseWriter, r *http.Request) {
 	}
 	models.SendData(w, roles)
 }
+
+func DeleteRolByID(w http.ResponseWriter, r *http.Request) {
+	rol := &models.Rol{}
+	if err := ConvertJson(w, r, rol); err != nil {
+		models.SendUnprocessableEntity(w)
+		return
+	}
+	err := models.DeleteRolByID(rol.Id_rol)
+	if err != nil {
+		http.Error(w, "error not delete element", http.StatusNotImplemented)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+}

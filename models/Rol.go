@@ -23,10 +23,7 @@ func CreateTableRol() {
 func (r *Rol) AddRol() error {
 	query := `INSERT INTO rol(nombre) VALUES(?);`
 	_, err := Exec(query, &r.Nombre)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 /**
@@ -65,4 +62,10 @@ func GetAllRolsData(mount, from int) (Roles, error) {
 		roles = append(roles, rol)
 	}
 	return roles, nil
+}
+
+func DeleteRolByID(id_rol int) error {
+	query := `DELETE FROM rol WHERE id_rol=?`
+	_, err := db.Query(query, id_rol)
+	return err
 }
